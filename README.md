@@ -13,7 +13,10 @@
 
 运行步骤 
 1.首先cmd里输入ipfs daemon 开启IPFS，该窗口需一直运行
+
 2.另开一个cmd，在dapp文件夹下输入truffle compile 编译合约
 输入truffle migrate将合约部署到Ganache上
+
 3.将Ganache的私钥导入Metamask钱包
+
 4.在app文件夹下 cmd 运行 npm run dev ，打开浏览器上传图书
