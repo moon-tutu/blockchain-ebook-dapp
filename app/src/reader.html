@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./js/vue.js"></script>
+  <script src="./js/kookit.js"></script>
+  <script src="reader.js"></script>
+  <title>阅读</title>
+</head>
+<body>
+  <div class="html-viewer-page book_content" id="chapter">
+    <div class="head">
+      <a href="./index.html" class="logo"></a>
+      <span class="head_content">{{this.chapters[current_chapter].label}}</span>
+    </div>
+    <!-- <router-link to="/foo">Go to Foo</router-link> -->
+    <!-- <router-link to="/bar">Go to Bar</router-link> -->
+    <div class="chapter_list" v-show="catlog_show">
+      <div  v-for="(item,key) in chapters"> 
+        <!-- routelink 是自定义标签，@click。native事件才会起作用mdmdmdmdmd -->
+        <!-- 点击改变当前目录 -->
+        <router-link class="chapter" :to="'/content/'+item.id" @click.native="goto(key)">{{item.label}}</router-link>      
+      </div>
+    </div>
+   
+    <!-- 显示当前章节没用组件显示 -->
+    <div v-html="chapters_detail[this.current_chapter].text"></div>
+    <!-- <router-view class="book_content"></router-view> -->
+    <!-- 按钮 -->
+    <div class="btn_list">
+      <div class="btn" @click="show_catalog">
+        <span class="catalog_btn"></span>
+      </div>
+      <div class="btn">
+        <span class="note_btn"></span>
+      </div>
+      <div class="btn">
+        <span class="fontsize_btn"></span>
+      </div>
+      <div class="btn">
+        <span class="dark_btn"></span>
+      </div>
+    </div>
+  </div>
+  
+  
+</body>
+<style>
+   *{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    outline: none;
+    color: #000;
+   
+  }
+  body{
+    background-color: #f6f7f9;
+  }
+  .head{
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 60%;
+    /* 丑陋 */
+    margin-left: -75px;
+    height: 50px;
+    border-bottom: 1px #f2f3f6 solid;
+    z-index:50;
+    background-color: #fff;
+  }
+  .logo{
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 20px;
+    width: 45px;
+    height: 40px;
+    background-image: url(./images/logo.png);
+    background-size: cover;
+  }
+  .head_content{
+    display: inline-block;
+    margin-left: 40px;
+    
+  }
+  /* 目录样式 */
+  .book_content{
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    box-sizing: border-box;
+    width: 60%;
+    margin: 0 20%;
+    text-indent:2em;
+    padding: 0 3em;
+    font-size: 25px;
+    background-color: #ffffff;
+  }
+  h1{
+    margin-bottom: 50px;
+  }
+  p{
+    margin: 20px 0;
+  }
+  /* 按钮 */
+  .btn_list{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    width: 48px;
+    bottom: 100px;
+    right:15%
+  }
+  .btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    width: 48px;
+    height: 48px;
+    background-color: #fff;
+    border-radius: 24px;
+    box-shadow:  0 8px 32px rgba(0,25,104,.1);;
+    /* text-align: center; */
+    /* line-height: 48px; */
+  }
+  .btn:hover{
+    cursor: pointer;
+  }
+  .catalog_btn{
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url(./images/catalog.png);
+  }
+  .fontsize_btn{
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url(./images/fontsize.png);
+  }
+  .dark_btn{
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url(./images/dark_white.png);
+  }
+  .note_btn{
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url(./images/note.png);
+  }
+  .chapter_list{
+    display: flex;
+    flex-direction: column; 
+    align-items:center;
+    position: fixed;
+    right: 20%;
+    top:0px;
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 0px 0px 50px #767373;
+    overflow: auto;
+  }
+  .chapter{
+    box-sizing: border-box;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    border-bottom: #f2f3f6 1px solid;
+    height: 50px;
+    overflow: hidden;
+    font-size: 15px;
+  }
+  .chapter:hover{
+    background-color: #f2f3f6;
+  }
+</style>
+</html>

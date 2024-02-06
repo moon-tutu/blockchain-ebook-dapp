@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title></title>
+</head>
+<body>
+  <div class="nav">
+    <div class="nav_top">
+      <span class="nav_placeholder"></span>
+      <span class="nav_li"><a href="./index.html">返回首页</a></span>
+      <span class="nav_separator">|</span>
+      <span class="nav_li"><a href="#upload_book">上传图书</a></span>
+      <span class="nav_separator">|</span>
+      <span class="nav_li" id="address">address</span>
+    </div>
+    <div class="nav_body">
+      <div class="logo">
+          <img src="./images/logo.png" alt="">
+        <span>藏书阁</span>
+      </div>
+      <div class="search" :class="searching" id="search"> <!-- v-bind简写 动态样式 -->
+        <span class="search_left"></span>        
+          <input type="text" placeholder="搜索" v-model="inputValue" @change="search() ,changeCss()">
+        <span class="search_right"></span>
+        <div class="search_result" v-for="(item,index) in search_res">
+          <a :href="reader+item.book_content">
+            <img :src="item.book_image" alt="">
+            <p>{{item.book_name}}</p>
+          </a> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home_page">
+
+    <div id="my_books">
+      <div class="my_header">
+        <h2>我的书架</h2>
+        <a href="#">查看我的书架 > {{ books_sum }}本</a>
+      </div>
+      <div class="my_body">
+        <div v-for="(item,index) in books">
+          <a :href="reader+item.book_content">
+            <img :src="item.book_image" alt="">
+            <p>{{item.book_name}}</p>
+          </a> 
+        </div>
+    </div>
+    <div class="upload" id="upload_book">
+      <h2>上传图书</h2>
+      <span>书籍名字<input type="text" class="book_name"></span>
+      <span>书籍图片
+        <label for="book_img">
+          <div class="img_upload">
+          <img class="book_img" :src="book_img" alt="">
+          <img class="icon"src="./images/upload.png" alt="upload">
+          点击上传书籍封面</div>
+        </label>
+        <input type="file" id="book_img" @change="changeimg" accept="image/*" >
+      </span>
+        <!-- <label for="book_img">
+        <div class="img_upload">上传书籍封面</div>
+        </label> -->
+      <span>书籍内容
+        <label for="book_content">
+          <div class="upload_content">{{book_name}}</div>
+        </label>
+        <input type="file" id="book_content" @change="change_book_name" class="book_content">
+      </span>
+      <button class="upload_btn" onclick="App.upload_book()">书籍上传</button><br/>
+    </div>
+  </div>
+
+  
+  
+  <!-- <button onclick="App.new_book()">书籍展示</button> -->
+  <!-- <button onclick="App.log_in()">登录</button> -->
+  
+
+
+<script src="./index.js"></script>
+<style>
+  .upload{
+    height: 600px;
+    /* background-color: #f6f7f9; */
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; 
+  }
+  .upload span{
+    display: block;
+    max-width: max-content;
+    margin-left: 100px;
+    font-size: 20px;
+  }
+  .upload button{
+    display: block;
+    margin-left: 100px;
+    font-size: 20px;
+  }
+  
+  .book_name {
+    margin-left: 30px;
+    width: 300px;
+    height: 40px;
+    border-radius: 5px;
+    border: #535960 2px solid;
+    box-sizing: border-box;
+    padding-left: 20px ;
+  }
+  .upload_btn{
+    width: 200px;
+    height: 50px;
+    color: #2a72dd;
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 5px;
+    border:#2a72dd 2px solid;
+  }
+  .upload_btn:hover{
+    background-color: #f6f7f9;
+  }
+  .upload_content{
+    width: 300px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border-radius: 10px;
+    border: #000 2px solid;
+  }
+  .icon{
+    width: 50px;
+    height: 50px;
+  }
+ 
+  .img_upload{
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding: 0 20px;
+    width: 150px;
+    height: 200px;
+    border: black 2px solid ;    
+  }
+  .book_img{
+    width: 150px;
+    height: 200px;
+    position: absolute;
+    z-index: 5;
+    top: 0px;
+    left: 0;
+    
+  }
+  #book_img,#book_content{
+    display: none;
+  }
+  
+  *{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    outline: none;
+    color: #000;
+   
+  }
+  .nav{
+    position: relative;
+    width: 100%;
+    height: 286px;
+    padding-bottom: 100px;
+    margin-bottom: 40px;
+    background-color: #f6f7f9;
+  }
+/* 导航头 */
+  .nav_top{
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 72px;
+    color: #535960;
+  }
+  .nav_placeholder{
+    flex:1;
+  }
+  .nav_separator,.nav_li{
+    margin-left: 12px;
+  }
+  .nav_li:hover{
+    color: black;
+    cursor:pointer;
+  }
+  .nav_separator{
+    opacity:.7;
+  }
+  /* 导航体 */
+  .nav_body{
+    margin-top: 78px;
+  }
+  .logo{
+    width: 170px;
+    margin: 0 auto;
+    font-family:LiSu;
+    font-size: 36px;
+  }
+  .logo img{
+    vertical-align:bottom;
+    width: 36px;
+    height: 36px;
+  }
+  .search{
+    position: relative;
+    width: 80%;
+    max-width: 840px;
+    margin: 48px auto 0;
+  }
+  /* 搜索 */
+  .search input{
+    width: 100%;
+    height: 52px;
+    box-sizing: border-box;
+    padding: 0 60px;
+    border-radius: 26px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgb(0 25 104 / 5%);
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #858C96;
+  }
+  .search_left{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 14px;
+    left: 18px;
+    content: "";
+    background: url(./images/search.png);
+  }
+  .search_right{
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 10px;
+    right: 10px;
+    content: "";
+    background: url(./images/enter.png);
+  }
+  .search_result{
+    background-color: ;
+  }
+  /* 搜索中的search样式 ，当按回车进行搜索时search样式变成searching*/ 
+  .searching::-webkit-scrollbar {
+    display: none;
+  }
+  .searching{    
+    height: 400px;
+    border-radius: 26px;
+    z-index: 90;
+    background-color: #fff;
+    overflow: auto;
+    scrollbar-width: none; /* 隐藏滚动条，但是元素还是可以滚动  */
+  }
+ 
+  .searching .search_result{
+    width: 100%;
+    height: 200px;
+  }
+  .searching img{
+    width: 100px;
+    height: 150px;
+    margin-left: 10%;
+  }
+  .searching p{
+    margin-left: 10%;
+  }
+  /* 主页 */
+  .home_page{
+    max-width: 1332px;
+    margin: 0 auto;
+    font-family: "楷体";
+  }
+  /* 最新上传 */
+  #new_books{
+    width: 100%;
+    height: 239px;
+    margin-bottom: 50px;
+  }
+  .new_header a{
+     font-size: 16px;
+     float:right;
+     margin-top: -24px;
+  }
+  .new_body{
+    display: flex;
+    justify-content:space-evenly;
+    margin-top: 20px;
+  }
+  .new_body img{
+    width:140px;
+    height:210px;
+  }
+  .new_body p{
+    font-size: 20px;
+    text-align: center;
+  }
+/* 我的书架 */
+  #my_books{
+    width: 100%;
+    height: 239px;
+    margin: 100px 0;
+  }
+  .my_header a{
+     font-size: 16px;
+     float:right;
+     margin-top: -24px;
+  }
+  .my_body{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+  }
+  .my_body img{
+    width:140px;
+    height:210px;
+  }
+  .my_body p{
+    font-size: 20px;
+    text-align: center;
+  }
+  
+
+</style>
+</body>
+</html>
